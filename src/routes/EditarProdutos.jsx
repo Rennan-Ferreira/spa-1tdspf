@@ -1,91 +1,71 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { ListaProdutos } from "../components/ListaProdutos";
-import { useState } from "react";
-
+import { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { ListaProdutos } from '../components/ListaProdutos';
+ 
 export default function EditarProdutos() {
+  document.title = "EDITAR PRODUTO";
 
-  document.title = "Editar Produtos";
-
-  //Criando um mecanismo de navegação com useNavigate()
   const navigate = useNavigate();
-
-  //Receber o ID do produto pelo HOOK useParams( );
-  const {id} = useParams();
-
-  //Recuperar o produto na lista pelo ID.
-  const produtoRecuperado = ListaProdutos.filter( produto => produto.id == id );
-
-  const [produto,setProduto] = useState({
-    id: produtoRecuperado[0].id,
-    nome: produtoRecuperado[0].nome,
-    desc: produtoRecuperado[0].desc,
-    preco: produtoRecuperado[0].preco,
-    img: produtoRecuperado[0].img,
-  });
-
-  const handleChange = (event) =>{
+  const { id } = useParams();
+  const produtoRecuperado = ListaProdutos.filter((produto) => produto.id == id)[0]
+  const [produto, setProduto] = useState({
+    id: produtoRecuperado.id,
+    nome: produtoRecuperado.nome,
+    desc: produtoRecuperado.desc,
+    img: produtoRecuperado.img,
+    preco: produtoRecuperado.preco,
+  })
   
-    //Executando uma desestruturação no elemento que disparou a ação.
-    const {name, value} = event.target;
-
-    //Utilizando as propriedades desestruturadas eu vou setar elas no objeto produto
-    // utilizando o SPREAD.
+  const handleChange = (e)=>{
+    //Destructuring
+    const {name,value} = e.target;
+    //Populando o state produto com as propriedades dos inputs que estão sendo ativados, utilizando SPREAD.
     setProduto({...produto,[name]:value});
   }
-  
-  const handleSubmit = (event) =>{
-    event.preventDefault();
-    
+
+  const handleSubmit = (e)=>{
+    e.preventDefault();
     let indice;
+    //Recuperando o índice do produto alterado com forEach.
+    // ListaProdutos.forEach((item,index)=>{
+    //   if(item === produto){
+    //     indice = index;
+    //   }
+    // });
 
-    indice = ListaProdutos.findIndex((item) => item.id === produto.id);
-    
-    ListaProdutos.splice(indice, 1, produto);
+    //Ou utilizando o método indexOf
+    indice = ListaProdutos.findIndex(item => item.id == produto.id);
 
-    alert("Produto alterado com sucesso!");
+    //Alterando o produto na lista com o método splice()
+    ListaProdutos.splice(indice,1,produto);
 
-    navigate("/produtos")
+    //Redirecionando o usuáio para a página de produtos!
+    navigate('/produtos');
   }
-  
-
   return (
-      <div>
-        <h1>Editar Produtos</h1> 
-  
+    <>
         <div>
           <form onSubmit={handleSubmit}>
             <fieldset>
-              <legend>Produto a ser Editado</legend>
+              <legend>Produto Selecionado</legend>
               <div>
-                <input type="hidden" name="id" value={produto.id}/>
-              </div>
-              <div>
-                <label htmlFor="idNome">Nome:</label>
+                <label htmlFor="idNome">Nome</label>
                 <input type="text" name="nome" id="idNome" value={produto.nome} onChange={handleChange}/>
               </div>
               <div>
-                <label htmlFor="idDesc">Descrição:</label>
+                <label htmlFor="idDesc">Descrição</label>
                 <input type="text" name="desc" id="idDesc" value={produto.desc} onChange={handleChange}/>
               </div>
               <div>
-                <label htmlFor="idPreco">Preço:</label>
+                <label htmlFor="idPreco">Preço</label>
                 <input type="text" name="preco" id="idPreco" value={produto.preco} onChange={handleChange}/>
               </div>
               <div>
                 <button>EDITAR</button>
               </div>
-
             </fieldset>
           </form>
         </div>
-
-          <div>
-            <p>Nome: {produto.nome}</p>
-            <p>Desc: {produto.desc}</p>
-            <p>Preço: {produto.preco}</p>
-          </div>
-
-
-      </div>
-  )
+    </>
+  );
 }

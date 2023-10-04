@@ -1,17 +1,18 @@
-import { createElement } from "react";
+import { Link } from "react-router-dom";
 
-export default function Cabecalho(props) {
-  return (
-    <>
-      <header>
-        <h1>Vite + React / coded by LeoYuuki+Tio</h1>
-        <ul>
-          {props.children.map((item, indice) => {
-            createElement("li", { key: indice }, item);
-            return item;
-          })}
-        </ul>
-      </header>
-    </>
-  );
+export default function Cabecalho(){
+
+    return(
+        <>
+            <header>
+                <h1>Vite+React</h1>
+                <nav>
+                    <ul>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/produtos">Produtos</Link></li>
+                    </ul>
+                </nav>
+            </header>
+        </>
+    )
 }
